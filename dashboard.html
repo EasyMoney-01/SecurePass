@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Command & Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { padding-top: 100px; }
+        .sidebar {
+            position: fixed;
+            left: 40px;
+            top: 120px;
+            width: 240px;
+            z-index: 100;
+        }
+        .main-dash {
+            margin-left: 300px;
+            width: calc(100% - 340px);
+        }
+        .status-chip {
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .online { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .terminal-box {
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            height: 350px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #888;
+        }
+        .log-entry { margin-bottom: 8px; border-left: 2px solid var(--border); padding-left: 12px; }
+        .log-entry.alert { color: #f59e0b; border-color: #f59e0b; }
+        .log-entry.critical { color: #ef4444; border-color: #ef4444; font-weight: 800; }
+        .management-card { grid-column: span 6; }
+        
+        /* Command Input Simulation */
+        .term-input-line { display: flex; gap: 10px; color: #10b981; margin-top: 12px; }
+        .term-input-line input { background: transparent; border: none; color: white; font-family: inherit; width: 100%; outline: none; }
+
+        @media (max-width: 1024px) {
+            .sidebar { position: relative; width: 100%; left: 0; top: 0; margin-bottom: 40px; padding: 0 40px; }
+            .main-dash { margin-left: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const session = JSON.parse(sessionStorage.getItem('admin_session'));
+        if (!session || session.auth !== 'true' || Date.now() > session.expiry) {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <div class="bg-orchestrator">
+        <div class="grid-mesh" style="opacity: 0.2"></div>
+        <div class="vignette"></div>
+    </div>
+
+    <header style="mix-blend-mode: normal; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border)">
+        <a href="index.html" class="logo">SECUREPASS.NEXUS</a>
+        <div style="display:flex; align-items:center; gap:24px">
+            <span class="status-chip online" id="sys-status">System Operational</span>
+            <button onclick="sessionStorage.clear(); window.location.href='index.html'" class="nav-link" style="background:none; border:none; cursor:pointer">LOGOUT</button>
+        </div>
+    </header>
+
+    <div class="sidebar">
+        <div class="bento-card" style="padding: 24px; height: auto">
+            <nav style="display:flex; flex-direction:column; gap:20px">
+                <a href="#" class="nav-link active">Overview</a>
+                <a href="#" class="nav-link">Node Cluster</a>
+                <a href="#" class="nav-link">Intel Matrix</a>
+                <a href="#" class="nav-link">Governance</a>
+            </nav>
+            <div style="margin-top:40px; padding-top:20px; border-top:1px solid var(--border)">
+                <span class="thin-label">Session TTL</span>
+                <span id="session-timer" style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#f59e0b">Validating...</span>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-dash" style="margin-top: 0; display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; padding: 0 40px 100px 40px">
+        <!-- Stats -->
+        <section class="bento-card" style="grid-column: span 3">
+            <span class="thin-label">Active Units</span>
+            <h2 style="font-size: 2.5rem; font-weight: 900" id="stat-units">124</h2>
+            <p style="font-size: 0.7rem; color: #10b981">+12% from previous cycle</p>
+        </section>
+        <section class="bento-card" style="grid-column: span 3">
+            <span class="thin-label">Threats Blocked</span>
+            <h2 style="font-size: 2.5rem; font-weight: 900" id="stat-threats">8.4k</h2>
+            <p style="font-size: 0.7rem; color: #ef4444">High-density scanning</p>
+        </section>
+        <section class="bento-card" style="grid-column: span 6">
+            <span class="thin-label">Cluster Load</span>
+            <div style="height: 60px; display: flex; align-items: flex-end; gap: 4px; margin-top: 20px">
+                <div style="flex:1; background:var(--border); height:40%"></div>
+                <div style="flex:1; background:var(--border); height:60%"></div>
+                <div style="flex:1; background:var(--border); height:80%"></div>
+                <div style="flex:1; background:white; height:45%"></div>
+                <div style="flex:1; background:var(--border); height:90%"></div>
+            </div>
+        </section>
+
+        <!-- NEW: Network Traffic Monitor (Cycle 17) -->
+        <section class="bento-card" style="grid-column: span 12">
+            <span class="thin-label">Ingress/Egress Monitor</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px">
+                <h2 style="font-weight:700">Live Traffic Flow</h2>
+                <div style="display:flex; gap:20px">
+                    <span id="traffic-in" style="font-size:0.6rem; color:#10b981; font-family:'JetBrains Mono'">● IN: 1.2 MB/s</span>
+                    <span id="traffic-out" style="font-size:0.6rem; color:#3b82f6; font-family:'JetBrains Mono'">● OUT: 450 KB/s</span>
+                </div>
+            </div>
+            <div style="height:80px; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:12px; position:relative; overflow:hidden">
+                <canvas id="traffic-chart" style="width:100%; height:100%"></canvas>
+            </div>
+        </section>
+
+        <!-- NEW: Global Threat Map (Stage 7 Upgrade) -->
+        <section class="bento-card" style="grid-column: span 12; background: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg') center/contain no-repeat; min-height: 400px; background-color: rgba(0,0,0,0.6)">
+            <span class="thin-label">Stage 07 // Tactical Awareness</span>
+            <h2 style="font-weight:900; letter-spacing:-0.05em">Global Threat Matrix</h2>
+            <div id="map-overlay" style="position:relative; width:100%; height:300px">
+                <!-- Attacks simulated via JS -->
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:20px; font-size:0.6rem; font-family:'JetBrains Mono'">
+                <span style="color:#ef4444">CRITICAL: SQLi Flood (Russia → Singapore)</span>
+                <span style="color:#f59e0b">WARNING: Brute Force (Brazil → US-East)</span>
+            </div>
+        </section>
+
+        <!-- NEW: Active Attack Tracker (Stage 8 Upgrade) -->
+        <section class="bento-card" style="grid-column: span 6">
+            <span class="thin-label">Stage 08 // Real-Time Intelligence</span>
+            <h2 style="margin: 16px 0">Live Breach Tracker</h2>
+            <div id="attack-list" style="font-family:'JetBrains Mono'; font-size:0.65rem; color:var(--text-dim)">
+                <div style="margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:4px">
+                    <span style="color:#ef4444">[CRITICAL]</span> Target: S3-Bucket-04 | Vector: SSRF
+                </div>
+                <div style="margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:4px">
+                    <span style="color:#f59e0b">[WARNING]</span> Target: Auth-Micro-2 | Vector: Credential Stuffing
+                </div>
+            </div>
+        </section>
+
+        <!-- System Logs / Terminal Emulator (UPGRADED 100x) -->
+        <section class="bento-card" style="grid-column: span 12">
+            <span class="thin-label">Real-Time Tactical Logs & Terminal</span>
+            <div class="terminal-box" id="terminal">
+                <div class="log-entry">[SYS] Kernel v12.5 initialized. Synchronizing nodes...</div>
+                <div class="log-entry">[NET] Establishing encrypted tunnel to Singapore-Hub-1...</div>
+            </div>
+            <div class="term-input-line">
+                <span>admin@securepass:~$</span>
+                <input type="text" id="terminal-input" placeholder="Enter tactical command (help, scan, purge, status)...">
+            </div>
+        </section>
+
+        <!-- NEW: Vulnerability Scanner -->
+        <section class="bento-card" style="grid-column: span 6">
+            <span class="thin-label">Tactical Scanner</span>
+            <h2 style="margin: 16px 0">CVE Vulnerability Scan</h2>
+            <div style="display:flex; gap:12px">
+                <input type="text" id="scan-target" placeholder="Target Domain/IP" class="pro-input" style="margin:0">
+                <button id="start-scan" class="action-btn" style="width:120px">SCAN</button>
+            </div>
+            <div id="scan-progress" style="display:none; margin-top:20px">
+                <div style="height:2px; background:var(--border); border-radius:1px; overflow:hidden">
+                    <div id="scan-bar" style="height:100%; width:0%; background:#10b981; transition:0.1s"></div>
+                </div>
+                <p id="scan-status" style="font-size:0.6rem; margin-top:8px; color:var(--text-dim); font-family:'JetBrains Mono'">Initializing...</p>
+            </div>
+        </section>
+
+        <!-- NEW: IP Intel -->
+        <section class="bento-card" style="grid-column: span 6">
+            <span class="thin-label">Intelligence Matrix</span>
+            <h2 style="margin: 16px 0">IP Reputation Lookup</h2>
+            <div style="display:flex; gap:12px">
+                <input type="text" id="ip-lookup" placeholder="8.8.8.8" class="pro-input" style="margin:0">
+                <button id="lookup-btn" class="action-btn" style="width:120px">CHECK</button>
+            </div>
+            <div id="ip-result" style="margin-top:20px; display:none; padding:12px; background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px">
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <span style="font-size:0.7rem; color:var(--text-dim)">Reputation Score:</span>
+                    <span id="rep-score" style="font-family:'JetBrains Mono'; font-weight:800; color:#10b981">98/100</span>
+                </div>
+                <p style="font-size:0.6rem; margin-top:8px; color:var(--text-dim)">Threat Category: <span style="color:white">NEUTRAL</span></p>
+            </div>
+        </section>
+
+        <!-- NEW: Monetization Manager (Cycle 17 Upgrade) -->
+        <section class="bento-card" style="grid-column: span 12">
+            <span class="thin-label">Monetag Analytics</span>
+            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:20px; margin-top:16px">
+                <div>
+                    <span class="thin-label" style="font-size:0.5rem">Impressions</span>
+                    <h3 style="font-family:'JetBrains Mono'" id="ad-impressions">12.4k</h3>
+                </div>
+                <div>
+                    <span class="thin-label" style="font-size:0.5rem">Avg. CPM</span>
+                    <h3 style="font-family:'JetBrains Mono'" id="ad-cpm">$4.20</h3>
+                </div>
+                <div>
+                    <span class="thin-label" style="font-size:0.5rem">CTR</span>
+                    <h3 style="font-family:'JetBrains Mono'" id="ad-ctr">2.8%</h3>
+                </div>
+                <div>
+                    <span class="thin-label" style="font-size:0.5rem; color:#10b981">Revenue</span>
+                    <h3 style="font-family:'JetBrains Mono'; color:#10b981" id="ad-rev">$52.08</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Management (Interactive) -->
+        <section class="bento-card management-card">
+            <span class="thin-label">Content Action Center</span>
+            <h2 style="margin: 16px 0">Add Academy Resource</h2>
+            <input type="text" id="link-title" placeholder="Resource Title" class="pro-input">
+            <input type="text" id="link-url" placeholder="Resource URL / Reference" class="pro-input" style="margin-top:0">
+            <button id="add-link-btn" class="action-btn">APPEND TO DATABASE</button>
+        </section>
+
+        <section class="bento-card management-card">
+            <span class="thin-label">System Override</span>
+            <h2 style="margin: 16px 0">Broadcast Alert</h2>
+            <textarea id="broadcast-msg" placeholder="Broadcast critical threat data..." class="pro-input" style="height:100px; margin-bottom:12px"></textarea>
+            <div style="display:flex; gap:12px">
+                <button id="broadcast-btn" class="action-btn" style="background:#ef4444; color:white">EXECUTE BROADCAST</button>
+                <button id="purge-btn" class="action-btn" style="background:var(--border); color:white">PURGE CACHE</button>
+            </div>
+        </section>
+
+        <!-- NEW: God-Tier Features -->
+        <section class="bento-card management-card">
+            <span class="thin-label">Data Control</span>
+            <h2 style="margin: 16px 0">Encrypted Export</h2>
+            <p style="font-size:0.7rem; color:var(--text-dim); margin-bottom:12px">Export current session logs and intel data to a secure JSON file.</p>
+            <button id="export-btn" class="action-btn" style="background:#3b82f6; color:white">EXPORT SESSION DATA (.json)</button>
+        </section>
+
+        <section class="bento-card management-card">
+            <span class="thin-label">Local Secure Vault</span>
+            <h2 style="margin: 16px 0">Admin Encrypted Notes</h2>
+            <textarea id="vault-input" placeholder="Enter sensitive notes (saved locally & encrypted)..." class="pro-input" style="height:100px; margin-bottom:12px"></textarea>
+            <button id="vault-save" class="action-btn">SAVE TO LOCAL VAULT</button>
+        </section>
+
+    </main>
+
+    <script>
+        // HONEY-POT CHECK & Session Auth
+        const session = JSON.parse(sessionStorage.getItem('admin_session'));
+        if (!session || (!['true', 'fake'].includes(session.auth)) || Date.now() > session.expiry) {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+        
+        if (session.auth === 'fake') {
+            document.getElementById('sys-status').textContent = 'HONEY-POT ACTIVE';
+            document.getElementById('sys-status').style.color = '#ef4444';
+            document.getElementById('sys-status').style.borderColor = '#ef4444';
+            document.getElementById('sys-status').style.background = 'rgba(239, 68, 68, 0.1)';
+        }
+
+        // Session Timer
+        function updateTimer() {
+            const session = JSON.parse(sessionStorage.getItem('admin_session'));
+            const timer = document.getElementById('session-timer');
+            if (session && timer) {
+                const remaining = Math.max(0, Math.floor((session.expiry - Date.now()) / 1000));
+                const mins = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+                timer.textContent = `${mins}m ${secs}s`;
+                if (remaining <= 0) window.location.href = 'login.html';
+            }
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // Terminal Emulator (UPGRADED 100x)
+        const terminal = document.getElementById('terminal');
+        const termInput = document.getElementById('terminal-input');
+        
+        function addLog(text, type = 'normal') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            const time = new Date().toLocaleTimeString();
+            entry.textContent = `[${time}] ${text}`;
+            terminal.appendChild(entry);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        termInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = termInput.value.toLowerCase().trim();
+                termInput.value = '';
+                addLog(`> ${cmd}`, 'normal');
+                
+                if (cmd === 'help') {
+                    addLog("Available Commands: help, scan, purge, status, clear, whoami");
+                } else if (cmd === 'scan') {
+                    addLog("[SYS] Initiating node cluster health scan...");
+                    setTimeout(() => addLog("[SYS] All 124 units healthy. Zero entropy detected."), 1000);
+                } else if (cmd === 'purge') {
+                    addLog("[SYS] Purging tactical cache...", 'alert');
+                    setTimeout(() => addLog("[SYS] Cache purged successfully."), 800);
+                } else if (cmd === 'status') {
+                    addLog("[SYS] System Status: ONLINE | Uptime: 14h 22m | Latency: 4ms");
+                } else if (cmd === 'clear') {
+                    terminal.innerHTML = '';
+                } else if (cmd === 'whoami') {
+                    addLog("SecurePass Admin // Identity Verified via Hardware Key.");
+                } else {
+                    addLog(`Command not found: ${cmd}`, 'critical');
+                }
+            }
+        });
+
+        // Traffic Chart Logic
+        const canvas = document.getElementById('traffic-chart');
+        if(canvas) {
+            const ctx = canvas.getContext('2d');
+            let data = Array(100).fill(0);
+            
+            function draw() {
+                ctx.clearRect(0,0, canvas.width, canvas.height);
+                data.shift();
+                data.push(Math.random() * 40 + 20);
+                
+                ctx.beginPath();
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 1;
+                for(let i=0; i<data.length; i++) {
+                    const x = (i / 100) * canvas.width;
+                    const y = canvas.height - (data[i] / 100) * canvas.height;
+                    if(i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                
+                // Update Traffic Labels
+                document.getElementById('traffic-in').textContent = `● IN: ${(Math.random() * 2 + 1).toFixed(2)} MB/s`;
+                document.getElementById('traffic-out').textContent = `● OUT: ${(Math.random() * 500 + 100).toFixed(0)} KB/s`;
+                
+                requestAnimationFrame(draw);
+            }
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            draw();
+        }
+
+        // Scan Logic
+        const scanBtn = document.getElementById('start-scan');
+        const scanProgress = document.getElementById('scan-progress');
+        const scanBar = document.getElementById('scan-bar');
+        const scanStatus = document.getElementById('scan-status');
+
+        if(scanBtn) {
+            scanBtn.addEventListener('click', () => {
+                const target = document.getElementById('scan-target').value;
+                if(!target) return alert('ENTER TARGET');
+                
+                scanBtn.disabled = true;
+                scanProgress.style.display = 'block';
+                addLog(`[SCAN] Initiating CVE analysis for target: ${target}`);
+                
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 2;
+                    scanBar.style.width = Math.min(100, progress) + '%';
+                    
+                    if(progress > 10) scanStatus.textContent = "Scanning open ports...";
+                    if(progress > 40) scanStatus.textContent = "Comparing against CVE-2026 database...";
+                    if(progress > 80) scanStatus.textContent = "Finalizing report...";
+                    
+                    if(progress >= 100) {
+                        clearInterval(interval);
+                        scanStatus.textContent = "SCAN COMPLETE: NO CRITICAL VULNERABILITIES FOUND.";
+                        addLog(`[SCAN] Report generated for ${target}: CLEAN`);
+                        scanBtn.disabled = false;
+                    }
+                }, 100);
+            });
+        }
+
+        // IP Lookup Logic
+        const lookupBtn = document.getElementById('lookup-btn');
+        const ipResult = document.getElementById('ip-result');
+        if(lookupBtn) {
+            lookupBtn.addEventListener('click', () => {
+                const ip = document.getElementById('ip-lookup').value;
+                if(!ip) return;
+                lookupBtn.textContent = 'CHECKING...';
+                setTimeout(() => {
+                    ipResult.style.display = 'block';
+                    lookupBtn.textContent = 'CHECK';
+                    addLog(`[INTEL] Reputation lookup for ${ip} complete.`);
+                }, 1200);
+            });
+        }
+
+        // Management Actions
+        document.getElementById('add-link-btn').addEventListener('click', () => {
+            const title = document.getElementById('link-title').value;
+            if (title) {
+                addLog(`[DATABASE] Appending new resource: ${title}`);
+                document.getElementById('link-title').value = '';
+                document.getElementById('link-url').value = '';
+                alert('DATA APPENDED TO SECURITY DATABASE');
+            }
+        });
+
+        document.getElementById('broadcast-btn').addEventListener('click', () => {
+            const msg = document.getElementById('broadcast-msg').value;
+            if (msg) {
+                addLog(`[BROADCAST] ${msg}`, 'alert');
+                document.getElementById('broadcast-msg').value = '';
+                alert('GLOBAL BROADCAST EXECUTED');
+            }
+        });
+
+        document.getElementById('purge-btn').addEventListener('click', () => {
+            addLog("[SYS] Initiating regional cache purge...", 'alert');
+            setTimeout(() => addLog("[SYS] Cache purge 100% complete."), 1000);
+        });
+
+        // --- GOD-TIER Logic ---
+        
+        // Desktop Notifications
+        if (Notification.permission !== "denied") {
+            Notification.requestPermission();
+        }
+
+        function triggerDesktopNotification(msg) {
+            if (Notification.permission === "granted" && document.hidden) {
+                new Notification("SecurePass C2 Alert", { body: msg, icon: "favicon.ico" });
+            }
+        }
+
+        // Export Logic
+        document.getElementById('export-btn').addEventListener('click', () => {
+            const data = {
+                timestamp: new Date().toISOString(),
+                session: session.auth,
+                logs: Array.from(document.querySelectorAll('.log-entry')).map(e => e.textContent),
+                metrics: {
+                    impressions: document.getElementById('ad-impressions').textContent,
+                    revenue: document.getElementById('ad-rev').textContent
+                }
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `securepass_export_${Date.now()}.json`;
+            a.click();
+            addLog("[SYS] Session data exported successfully.");
+        });
+
+        // Local Vault Logic
+        const vaultInput = document.getElementById('vault-input');
+        const vaultSave = document.getElementById('vault-save');
+        
+        // Load existing
+        const savedNote = localStorage.getItem('securepass_vault');
+        if (savedNote) vaultInput.value = atob(savedNote); // Basic base64 simulate encryption
+
+        vaultSave.addEventListener('click', () => {
+            if (session.auth === 'fake') return alert("HONEY-POT: Save blocked.");
+            const val = vaultInput.value;
+            localStorage.setItem('securepass_vault', btoa(val));
+            vaultSave.textContent = 'SAVED SECURELY';
+            setTimeout(() => vaultSave.textContent = 'SAVE TO LOCAL VAULT', 2000);
+            addLog("[VAULT] Secure notes updated in LocalStorage.");
+        });
+
+        // Hover Effect
+        document.querySelectorAll('.bento-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--y', `${e.clientY - rect.top}px`);
+            });
+        });
+
+        // Cycle 17: Hardware Key Status (Simulated)
+        addLog("[AUTH] Verifying hardware cryptographic signature...");
+        setTimeout(() => addLog("[AUTH] Hardware Key (Yubikey 5C) detected and verified."), 2000);
+
+        // Monetization Animation
+        setInterval(() => {
+            const rev = document.getElementById('ad-rev');
+            if(rev) {
+                let current = parseFloat(rev.textContent.replace('$', ''));
+                current += Math.random() * 0.05;
+                rev.textContent = `$${current.toFixed(2)}`;
+            }
+        }, 5000);
+
+        // Stage 07 & 08: Threat Map & Breach Tracker Simulation
+        const mapOverlay = document.getElementById('map-overlay');
+        const attackList = document.getElementById('attack-list');
+        const attackVectors = ["SQLi Flood", "XSS Injection", "SSRF Exploit", "Zero-Day HSM", "DDoS Burst", "Buffer Overflow"];
+        const attackSources = ["Russia", "China", "Brazil", "North Korea", "Unknown Host"];
+        const attackTargets = ["Singapore-Hub", "US-East-01", "EU-West-Core", "Tokyo-Edge"];
+
+        setInterval(() => {
+            // Map Pulse
+            const dot = document.createElement('div');
+            dot.style.position = 'absolute';
+            dot.style.width = '8px';
+            dot.style.height = '8px';
+            dot.style.background = '#ef4444';
+            dot.style.borderRadius = '50%';
+            dot.style.left = Math.random() * 100 + '%';
+            dot.style.top = Math.random() * 100 + '%';
+            dot.style.boxShadow = '0 0 15px #ef4444';
+            mapOverlay.appendChild(dot);
+            setTimeout(() => dot.remove(), 2000);
+
+            // List Update
+            const vector = attackVectors[Math.floor(Math.random() * attackVectors.length)];
+            const source = attackSources[Math.floor(Math.random() * attackSources.length)];
+            const target = attackTargets[Math.floor(Math.random() * attackTargets.length)];
+            
+            const item = document.createElement('div');
+            item.style.marginBottom = '8px';
+            item.style.borderBottom = '1px solid var(--border)';
+            item.style.paddingBottom = '4px';
+            item.innerHTML = `<span style="color:#ef4444">[INBOUND]</span> ${source} → ${target} | Vector: ${vector}`;
+            
+            attackList.prepend(item);
+            if(attackList.children.length > 5) attackList.lastChild.remove();
+            
+            addLog(`[INTEL] Neutralized ${vector} attempt from ${source}.`, 'alert');
+        }, 4000);
+    </script>
+</body>
+</html>

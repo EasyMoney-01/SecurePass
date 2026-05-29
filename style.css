@@ -1,0 +1,263 @@
+:root {
+    --bg: #000000;
+    --surface: #0a0a0a;
+    --glass: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.08);
+    --accent: #ffffff;
+    --accent-dim: #666666;
+    --text-main: #ffffff;
+    --text-dim: #888888;
+    --geist-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: var(--geist-font);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* --- Premium Background Architecture --- */
+.bg-orchestrator {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.grid-mesh {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(circle at center, black, transparent 80%);
+    opacity: 0.4;
+}
+
+.vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, var(--bg) 100%);
+}
+
+.glow-orb {
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+    top: -30vw;
+    left: 20vw;
+    filter: blur(100px);
+    animation: pulse 10s infinite alternate var(--ease);
+}
+
+@keyframes pulse {
+    from { opacity: 0.3; transform: scale(1); }
+    to { opacity: 0.6; transform: scale(1.2); }
+}
+
+/* --- Ultra-Premium Typography --- */
+h1 {
+    font-weight: 900;
+    font-size: clamp(2.5rem, 10vw, 8rem);
+    letter-spacing: -0.06em;
+    line-height: 0.85;
+    margin-bottom: 40px;
+    background: linear-gradient(to bottom, #fff 40%, #666 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.thin-label {
+    font-weight: 200;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    display: block;
+}
+
+/* --- Header Evolution --- */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: clamp(20px, 4vw, 40px) clamp(20px, 5vw, 60px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    mix-blend-mode: difference;
+    background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+}
+
+.logo {
+    font-weight: 800;
+    font-size: clamp(0.7rem, 2vw, 0.9rem);
+    text-decoration: none;
+    color: white;
+    letter-spacing: 0.2em;
+}
+
+.nav-links {
+    display: flex;
+    gap: clamp(20px, 3vw, 48px);
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 500;
+    transition: color 0.4s var(--ease);
+}
+
+.nav-link:hover, .nav-link.active {
+    color: white;
+}
+
+/* --- Bento 2.0 System --- */
+main {
+    max-width: 1400px;
+    margin: clamp(120px, 15vh, 180px) auto 100px;
+    padding: 0 clamp(20px, 5vw, 60px);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.bento-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: clamp(20px, 3vw, 32px);
+    padding: clamp(24px, 4vw, 48px);
+    position: relative;
+    transition: transform 0.6s var(--ease), border-color 0.6s var(--ease);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.bento-card:hover {
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-8px);
+}
+
+.bento-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--x) var(--y), rgba(255,255,255,0.08), transparent 40%);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+}
+
+.bento-card:hover::before { opacity: 1; }
+
+.hero-section { grid-column: span 8; background: none; border: none; padding: 0; align-self: center; }
+.hero-section p { 
+    font-weight: 300; 
+    font-size: clamp(1.1rem, 3vw, 1.5rem); 
+    color: var(--text-dim); 
+    max-width: 600px; 
+    line-height: 1.3; 
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* --- Interaction Components --- */
+.pro-input {
+    width: 100%;
+    background: #000;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: clamp(16px, 2vw, 24px);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    margin: 20px 0;
+    outline: none;
+    transition: border-color 0.4s var(--ease);
+}
+
+.pro-input:focus { border-color: white; }
+
+.action-btn {
+    width: 100%;
+    padding: clamp(16px, 2vw, 24px);
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    transition: transform 0.4s var(--ease);
+}
+
+.action-btn:hover { transform: scale(0.98); }
+
+.reading-content {
+    font-weight: 300;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: var(--text-dim);
+    line-height: 1.7;
+}
+
+.reading-content h3 {
+    color: white;
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: 700;
+    margin: clamp(40px, 8vw, 60px) 0 20px;
+    letter-spacing: -0.04em;
+}
+
+/* --- Footer Architecture --- */
+footer {
+    padding: clamp(60px, 10vw, 100px) clamp(20px, 5vw, 60px);
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: clamp(20px, 5vw, 60px);
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 1024px) {
+    .hero-section div {
+        flex-direction: column;
+        gap: 20px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    header { padding: 20px; flex-direction: column; gap: 20px; position: absolute; }
+    .nav-links { gap: 15px; width: 100%; justify-content: center; flex-wrap: wrap; }
+    h1 { margin-bottom: 20px; }
+}

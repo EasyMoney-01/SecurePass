@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Gate | SecurePass Command & Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-card {
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+        }
+        @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+    </style>
+</head>
+<body style="height:100vh; overflow:hidden">
+    <div class="bg-orchestrator">
+        <div class="grid-mesh"></div>
+        <div class="vignette"></div>
+        <div class="glow-orb"></div>
+    </div>
+
+    <div class="login-card bento-card">
+        <span class="thin-label">Authentication Gate</span>
+        <h2 style="font-weight:900; letter-spacing:-0.05em; margin-bottom:12px; font-size:2rem">Command Center</h2>
+        <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:32px">Personnel verification required for tactical access.</p>
+        
+        <input type="text" id="admin-id" placeholder="Admin Identity" class="pro-input" style="margin:0 0 16px 0">
+        <input type="password" id="admin-key" placeholder="Cryptographic Key" class="pro-input" style="margin:0 0 24px 0">
+        
+        <button id="auth-btn" class="action-btn">ESTABLISH UPLINK</button>
+        <p id="error-msg" style="color:#ef4444; font-size:0.7rem; margin-top:20px; text-align:center; display:none">ACCESS DENIED: INVALID SIGNATURE</p>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Security-Hardened Auth Logic
+        let loginAttempts = 0;
+        const MAX_ATTEMPTS = 5;
+        const COOLDOWN = 10000; // 10s lockout
+
+        async function sha256(message) {
+            const msgUint8 = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        const AUTH_HASH = "07b535ef2e6c7ae4d85ea7a3d9440220f6e2d26825880a40e81e4dc2dec53824";
+
+        document.getElementById('auth-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('auth-btn');
+            const error = document.getElementById('error-msg');
+            const idField = document.getElementById('admin-id');
+            const keyField = document.getElementById('admin-key');
+            
+            if (loginAttempts >= MAX_ATTEMPTS) {
+                error.textContent = `SYSTEM LOCKOUT: EXCEEDED ATTEMPTS. RETRY IN ${COOLDOWN/1000}S.`;
+                error.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'AUTHENTICATING...';
+            btn.classList.add('shimmer');
+
+            const hashedInput = await sha256(keyField.value);
+            
+            // Artificial delay to prevent timing attacks
+            setTimeout(() => {
+                // HONEY-POT TRAP (God-Tier Feature)
+                if (idField.value === 'admin' && keyField.value === 'password') {
+                    btn.textContent = 'ACCESS GRANTED [SIMULATION]';
+                    btn.style.background = '#f59e0b';
+                    sessionStorage.setItem('admin_session', JSON.stringify({ auth: 'fake', expiry: Date.now() + 3600000 }));
+                    window.location.href = 'dashboard.html';
+                } 
+                else if (hashedInput === AUTH_HASH && idField.value.trim().length > 2) {
+                    btn.textContent = 'ACCESS GRANTED';
+                    btn.style.background = '#10b981';
+                    sessionStorage.setItem('admin_session', JSON.stringify({ auth: 'true', expiry: Date.now() + 7200000 }));
+                    keyField.value = '';
+                    idField.value = '';
+                    window.location.href = 'dashboard.html';
+                } else {
+                    loginAttempts++;
+                    btn.textContent = 'ESTABLISH UPLINK';
+                    btn.disabled = false;
+                    btn.classList.remove('shimmer');
+                    error.textContent = `ACCESS DENIED: INVALID SIGNATURE (${loginAttempts}/${MAX_ATTEMPTS})`;
+                    error.style.display = 'block';
+                    keyField.value = ''; 
+                    
+                    if (loginAttempts >= MAX_ATTEMPTS) {
+                        setTimeout(() => { loginAttempts = 0; error.style.display = 'none'; }, COOLDOWN);
+                    }
+                }
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

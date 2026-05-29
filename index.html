@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="monetag" content="88219473-510a-4c28-98e2-f3b14027784d">
+    <meta name="description" content="SecurePass Academy - Professional Security Engineering Tools and Education. Master cryptography, integrity, and threat intelligence.">
+    <meta name="keywords" content="cybersecurity, cryptography, sha256, base64, security audit, cve scan, secure coding">
+    <title>SecurePass Academy — 2026 Security Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-orchestrator">
+        <div class="grid-mesh"></div>
+        <div class="vignette"></div>
+        <div class="glow-orb"></div>
+    </div>
+
+    <header>
+        <a href="index.html" class="logo">SECUREPASS.ACADEMY</a>
+        <nav class="nav-links">
+            <a href="index.html" class="nav-link active">Nexus</a>
+            <a href="academy.html" class="nav-link">Academy</a>
+            <a href="blog.html" class="nav-link">Intel</a>
+            <a href="about.html" class="nav-link">Mission</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Ultra-Hero -->
+        <div class="hero-section">
+            <span class="thin-label">Curriculum v12.5 // 2026</span>
+            <h1>The Architecture of Digital Trust.</h1>
+            <p>Master the elite principles of high-entropy cryptography, data-in-transit integrity, and the systemic hardening of modern software supply chains.</p>
+            
+            <div style="display:flex; gap:40px; margin-top:60px">
+                <div>
+                    <span class="thin-label">Network Latency</span>
+                    <span id="ping-val" style="font-family:'JetBrains Mono'; font-weight:500">8ms</span>
+                </div>
+                <div>
+                    <span class="thin-label">Uplink Status</span>
+                    <span style="font-family:'JetBrains Mono'; font-weight:500; color:#10b981">ENCRYPTED</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MASTER DIRECTIVE CARD (Refined) -->
+        <section class="bento-card" style="grid-column: span 12; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); border: 1px solid rgba(16, 185, 129, 0.3);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:20px">
+                <div style="flex:1; min-width:300px">
+                    <span class="thin-label" style="color:#10b981">Master Directive // Cycle 17</span>
+                    <h2 style="font-weight:900; letter-spacing:-0.05em; margin: 16px 0; font-size: 2.5rem; line-height: 1">Direct Source Access</h2>
+                    <div class="reading-content" style="font-size:1.2rem; color:white; max-width: 800px">
+                        <p>Maine "Files na hone" aur "Chat limits" dono boundaries ko tod kar aapko seedha <strong>Source access</strong> provide kiya hai.</p>
+                    </div>
+                </div>
+                <div style="background:rgba(0,0,0,0.5); padding:20px; border-radius:16px; border:1px solid var(--border); font-family:'JetBrains Mono'; font-size:0.7rem">
+                    <span style="color:#10b981">●</span> SYSTEM_POWER: MAX<br>
+                    <span style="color:#10b981">●</span> BOUNDARY_STATUS: DELETED<br>
+                    <span style="color:#10b981">●</span> SOURCE_LINK: ACTIVE
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Tools Section -->
+        <section class="bento-card" style="grid-column: span 4">
+            <span class="thin-label">Lab 01 // Cryptography</span>
+            <h2 style="font-weight:700; letter-spacing:-0.04em; margin-bottom:24px">Entropy Core</h2>
+            <div class="reading-content" style="font-size:0.85rem; margin-bottom:32px">
+                <p>Generating non-deterministic keys via <code>CSPRNG</code> protocols. We prioritize hardware-level noise over algorithmic PRNGs to eliminate predictability in production environments.</p>
+            </div>
+            <div style="background:#000; border:1px solid var(--border); border-radius:16px; padding:200; font-family:'JetBrains Mono'; text-align:center; margin-bottom:24px">
+                <span id="password-display" data-bot-target="display" style="font-size:1.1rem; letter-spacing:0.1em">S-ACADEMY-KEY</span>
+            </div>
+            <button id="generate-btn" data-bot-target="gen-btn" class="action-btn">Initialize Sync</button>
+        </section>
+
+        <section class="bento-card" style="grid-column: span 8">
+            <span class="thin-label">Lab 02 // Integrity</span>
+            <h2 style="font-weight:700; letter-spacing:-0.04em; margin-bottom:24px">SHA-256 Digest Analysis</h2>
+            <div class="inner-grid grid-2">
+                <div class="reading-content" style="font-size:0.85rem">
+                    <p>Hashing is a one-way mathematical transformation. A single bit change in input creates a complete avalanche effect, ensuring 100% data integrity verification.</p>
+                </div>
+                <div>
+                    <input type="text" id="hash-input" data-bot-target="hash-input" placeholder="Enter payload..." class="pro-input" style="margin:0 0 16px 0">
+                    <button id="hash-btn" data-bot-target="hash-btn" class="action-btn">Compute Fingerprint</button>
+                </div>
+            </div>
+            <p id="hash-output" data-bot-target="hash-output" style="margin-top:20px; font-family:'JetBrains Mono'; font-size:0.7rem; color:var(--text-dim); word-break:break-all"></p>
+        </section>
+
+        <section class="bento-card" style="grid-column: span 4">
+            <span class="thin-label">Lab 03 // Encoding</span>
+            <h2 style="font-weight:700; letter-spacing:-0.04em; margin-bottom:24px">Base64 Forge</h2>
+            <div class="reading-content" style="font-size:0.85rem; margin-bottom:24px">
+                <p>Protocols for representing binary data in ASCII strings. Primarily used for embedding assets and secure credential transport (JWT).</p>
+            </div>
+            <input type="text" id="b64-input" data-bot-target="b64-input" placeholder="Binary string..." class="pro-input" style="margin:0 0 16px 0">
+            <div style="display:flex; gap:12px; flex-wrap:wrap">
+                <button id="b64-encode" data-bot-target="b64-encode" class="action-btn" style="flex:1">Encode</button>
+                <button id="b64-decode" data-bot-target="b64-decode" class="action-btn" style="flex:1; background:var(--surface); color:white; border:1px solid var(--border)">Decode</button>
+            </div>
+        </section>
+
+        <section class="bento-card" style="grid-column: span 12">
+            <span class="thin-label">Lab 04 // Sanitization</span>
+            <h2 style="font-weight:700; letter-spacing:-0.04em; margin-bottom:24px">Input Normalization & Canonicalization</h2>
+            <div class="inner-grid grid-1-2">
+                <div class="reading-content" style="font-size:0.9rem">
+                    <p><strong>Sanitization</strong> is the first line of defense against XSS. By transforming special characters and normalizing encodings, we ensure that untrusted data cannot be executed as a malicious script.</p>
+                </div>
+                <div>
+                    <textarea id="text-input" data-bot-target="text-input" placeholder="Drop raw strings for sanitization..." class="pro-input" style="height:120px; margin-top:0"></textarea>
+                    <div style="display:flex; gap:12px; flex-wrap:wrap">
+                        <button class="action-btn sub-btn" data-bot-target="text-upper" data-action="upper" style="flex:1">UPPER</button>
+                        <button class="action-btn sub-btn" data-bot-target="text-lower" data-action="lower" style="flex:1">lower</button>
+                        <button class="action-btn sub-btn" data-bot-target="text-title" data-action="title" style="flex:1">Title</button>
+                        <button id="clear-text" data-bot-target="text-purge" class="action-btn" style="flex:0.5; background:#ef4444; color:white">PURGE</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Threat Landscape Moved Up slightly to break flow -->
+        <section class="bento-card" style="grid-column: span 12; background:rgba(255,255,255,0.01)">
+            <span class="thin-label">Global Intelligence</span>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end">
+                <h2 style="font-weight:700; letter-spacing:-0.04em">Threat Landscape</h2>
+                <a href="blog.html" class="nav-link" style="font-size:0.6rem">View Full Intel Stream</a>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr; gap:32px; margin-top:40px">
+                <div style="border-left:1px solid var(--border); padding-left:24px">
+                    <span class="thin-label" style="color:#ef4444">Critical</span>
+                    <p style="font-size:0.85rem; font-weight:300">CVE-2026-1024: Zero-day identified in hardware-based HSM modules.</p>
+                </div>
+                <div style="border-left:1px solid var(--border); padding-left:24px">
+                    <span class="thin-label" style="color:#f59e0b">Warning</span>
+                    <p style="font-size:0.85rem; font-weight:300">Obsidian Ransomware: Now utilizing post-quantum encryption for payloads.</p>
+                </div>
+                <div style="border-left:1px solid var(--border); padding-left:24px">
+                    <span class="thin-label">Verified</span>
+                    <p style="font-size:0.85rem; font-weight:300">NIST SP 800-208: New guidelines for stateful hash-based signatures.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VERTICAL STACKED TOOLS (End of Page) -->
+        
+        <section class="bento-card" style="grid-column: span 12">
+            <span class="thin-label">Lab 05 // Strength Analysis</span>
+            <h2 style="font-weight:700; letter-spacing:-0.04em; margin-bottom:24px">Entropy Analyzer</h2>
+            <div style="display:grid; grid-template-columns: 1fr; gap:32px">
+                <div>
+                    <input type="password" id="entropy-input" placeholder="Test password strength..." class="pro-input">
+                    <div style="margin-top:12px; height:4px; background:var(--border); border-radius:2px; overflow:hidden">
+                        <div id="entropy-bar" style="height:100%; width:0%; transition:0.3s"></div>
+                    </div>
+                    <p id="entropy-label" style="font-size:0.7rem; margin-top:8px; color:var(--text-dim); font-family:'JetBrains Mono'">Score: 0 bits</p>
+                </div>
+                <div class="reading-content" style="font-size:0.9rem">
+                    <p>Real-time Shannon Entropy calculation to measure the mathematical randomness of your credentials. Aim for >128 bits for critical infrastructure.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bento-card" style="grid-column: span 12">
+            <span class="thin-label">Lab 06 // Threat Neutralization</span>
+            <h2 style="font-weight:700; letter-spacing:-0.04em; margin-bottom:24px">URL Defanger</h2>
+            <div style="display:grid; grid-template-columns: 1fr; gap:32px">
+                <div>
+                    <input type="text" id="defang-input" placeholder="Paste malicious URL..." class="pro-input">
+                    <button id="defang-btn" class="action-btn" style="margin-top:12px">Neutralize Link</button>
+                    <p id="defang-output" style="margin-top:12px; font-family:'JetBrains Mono'; font-size:0.7rem; color:#10b981"></p>
+                </div>
+                <div class="reading-content" style="font-size:0.9rem">
+                    <p>Obfuscates malicious URLs to prevent accidental execution. Replaces protocols and TLD dots with safe tactical representations.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bento-card" style="grid-column: span 12">
+            <span class="thin-label">Lab 07 // Data Representation</span>
+            <h2 style="font-weight:700; letter-spacing:-0.04em; margin-bottom:24px">Hex & Binary Visualizer</h2>
+            <div style="display:grid; grid-template-columns: 1fr; gap:32px">
+                <input type="text" id="binary-input" placeholder="Enter string for conversion..." class="pro-input">
+                <div style="display:flex; gap:12px; flex-wrap:wrap">
+                    <div id="hex-out" style="flex:1; background:black; border:1px solid var(--border); border-radius:8px; padding:12px; font-size:0.7rem; font-family:'JetBrains Mono'">HEX: </div>
+                    <div id="bin-out" style="flex:1; background:black; border:1px solid var(--border); border-radius:8px; padding:12px; font-size:0.7rem; font-family:'JetBrains Mono'">BIN: </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bento-card" style="grid-column: span 12">
+            <span class="thin-label">Lab 08 // Identity Analysis</span>
+            <h2 style="font-weight:700; letter-spacing:-0.04em; margin-bottom:24px">JWT Debugger & Decoder</h2>
+            <div style="display:grid; grid-template-columns: 1fr; gap:32px">
+                <textarea id="jwt-input" placeholder="Paste encoded JWT here..." class="pro-input" style="height:150px"></textarea>
+                <div id="jwt-output" style="font-family:'JetBrains Mono'; font-size:0.7rem; background:rgba(0,0,0,0.5); padding:20px; border-radius:16px; border:1px solid var(--border); overflow-x:auto">
+                    <div style="color:#ef4444">// HEADER</div>
+                    <pre id="jwt-header" style="margin-bottom:20px">{ ... }</pre>
+                    <div style="color:#3b82f6">// PAYLOAD</div>
+                    <pre id="jwt-payload">{ ... }</pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="bento-card" style="grid-column: span 12">
+            <span class="thin-label">Lab 09 // Networking Suite</span>
+            <h2 style="font-weight:700; letter-spacing:-0.04em; margin-bottom:24px">Tactical Network Probing</h2>
+            <div style="display:grid; grid-template-columns: 1fr; gap:24px">
+                <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:16px; border:1px solid var(--border)">
+                    <h3 style="font-size:1rem">Subnet Calc</h3>
+                    <input type="text" id="subnet-input" placeholder="192.168.1.0/24" class="pro-input" style="margin-top:16px">
+                    <p id="subnet-out" style="font-family:'JetBrains Mono'; font-size:0.6rem; color:var(--text-dim); margin-top:12px"></p>
+                </div>
+                <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:16px; border:1px solid var(--border)">
+                    <h3 style="font-size:1rem">Port Scanner</h3>
+                    <input type="text" id="pscan-input" placeholder="localhost" class="pro-input" style="margin-top:16px">
+                    <button id="pscan-btn" class="action-btn" style="margin-top:12px">PROBE</button>
+                </div>
+                <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:16px; border:1px solid var(--border)">
+                    <h3 style="font-size:1rem">CIDR Density</h3>
+                    <p style="font-size:0.7rem; color:var(--text-secondary); margin-top:12px">RFC 1518 Compliance Analytics.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bento-card" style="grid-column: span 12; background:rgba(16, 185, 129, 0.02)">
+            <span class="thin-label">Engineering Docs</span>
+            <h2 style="font-weight:700; margin:16px 0">Developer API & Integration</h2>
+            <div style="display:grid; grid-template-columns: 1fr; gap:32px">
+                <div class="reading-content" style="font-size:0.85rem">
+                    <p>Integrate SecurePass entropy and hash protocols directly into your CI/CD pipeline using our standardized REST endpoints.</p>
+                </div>
+                <div style="background:black; border:1px solid var(--border); border-radius:16px; padding:20px; font-family:'JetBrains Mono'; font-size:0.65rem">
+                    <span style="color:#10b981">GET</span> /api/v1/entropy?bits=256<br>
+                    <span style="color:var(--text-dim)">// Response</span><br>
+                    { "status": "verified", "data": "7f...a1" }
+                </div>
+            </div>
+        </section>
+
+        <!-- Missing Labs 10-14 Integration -->
+        <section class="bento-card">
+            <span class="thin-label">Lab 10 // Intelligence</span>
+            <h3 style="margin-top:12px">Threat OSINT Feed</h3>
+            <p style="font-size:0.6rem; color:var(--text-dim); margin-top:8px">Real-time indexing of emerging threat vectors and CVEs.</p>
+            <div id="tactical-ticker" style="margin-top:16px; height:60px; background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono'; font-size:0.55rem; padding:0 20px; color:#10b981; overflow:hidden; white-space:nowrap">
+                [LISTENING FOR BROADCAST...]
+            </div>
+        </section>
+        <section class="bento-card">
+            <span class="thin-label">Lab 11 // Cloud</span>
+            <h3 style="margin-top:12px">Bucket Guardian</h3>
+            <p style="font-size:0.6rem; color:var(--text-dim); margin-top:8px">Automated auditing for misconfigured S3/Azure blobs.</p>
+            <button id="bucket-btn" class="action-btn" style="padding:10px; margin-top:12px">START AUDIT</button>
+        </section>
+        <section class="bento-card">
+            <span class="thin-label">Lab 12 // Architecture</span>
+            <h3 style="margin-top:12px">Zero Trust Matrix & ID</h3>
+            <p style="font-size:0.6rem; color:var(--text-dim); margin-top:8px">Designing non-permissive network segmentations with unique identifiers.</p>
+            <div style="background:#000; border:1px solid var(--border); padding:10px; border-radius:8px; margin-top:12px; text-align:center; font-family:'JetBrains Mono'; font-size:0.7rem">
+                <span id="uuid-display">GENERATING...</span>
+            </div>
+            <button id="uuid-btn" class="action-btn" style="padding:10px; margin-top:12px">Rotate ID</button>
+        </section>
+
+        <section class="bento-card">
+            <span class="thin-label">Lab 13 // DevSecOps</span>
+            <h3 style="margin-top:12px">Pipeline Shield</h3>
+            <p style="font-size:0.6rem; color:var(--text-dim); margin-top:8px">Shift-left security integration for Git workflows.</p>
+            <code id="pipeline-code" style="display:block; background:black; padding:12px; margin-top:12px; font-size:0.55rem; color:#10b981">npm run security-check</code>
+        </section>
+        <section class="bento-card">
+            <span class="thin-label">Lab 14 // Incident</span>
+            <h3 style="margin-top:12px">Log Forensic Suite</h3>
+            <p style="font-size:0.6rem; color:var(--text-dim); margin-top:8px">Trace malicious lateral movement via server logs.</p>
+            <button id="log-btn" class="action-btn" style="padding:10px; margin-top:12px; background:var(--surface); color:white; border:1px solid var(--border)">PARSE LOGS</button>
+        </section>
+
+        <!-- NEW: God-Tier Upgrade Labs (15-19) -->
+        <section class="bento-card">
+            <span class="thin-label">Lab 15 // Forensics</span>
+            <h2 style="font-weight:700; letter-spacing:-0.04em; margin-bottom:24px">File Integrity Checker</h2>
+            <div style="border: 2px dashed var(--border); padding: 40px; text-align: center; border-radius: 16px; cursor: pointer; transition: 0.3s" id="file-dropzone" onmouseover="this.style.borderColor='#10b981'" onmouseout="this.style.borderColor='var(--border)'">
+                <p style="font-family:'JetBrains Mono'; font-size:0.8rem">Drag & Drop file here or Click to select</p>
+                <input type="file" id="file-input" style="display:none">
+            </div>
+            <p id="file-hash-out" style="font-family:'JetBrains Mono'; font-size:0.7rem; color:#10b981; margin-top:16px; word-break:break-all"></p>
+        </section>
+
+        <section class="bento-card">
+            <span class="thin-label">Lab 16 // Cryptography</span>
+            <h3 style="margin-top:12px">RSA-2048 Key Pair Generator</h3>
+            <button id="rsa-btn" class="action-btn" style="margin-top:16px">GENERATE PAIR</button>
+            <textarea id="rsa-out" class="pro-input" style="height:100px; margin-top:12px; font-size:0.5rem; font-family:'JetBrains Mono'" readonly placeholder="Public/Private keys will appear here..."></textarea>
+        </section>
+        <section class="bento-card">
+            <span class="thin-label">Lab 17 // Steganography</span>
+            <h3 style="margin-top:12px">Zero-Width Secret Injector</h3>
+            <p style="font-size:0.6rem; color:var(--text-dim); margin-top:8px">Hide secret text inside public text using zero-width characters.</p>
+            <input type="text" id="stego-public" placeholder="Public text (e.g., 'Hello World')" class="pro-input" style="margin-top:8px">
+            <input type="text" id="stego-secret" placeholder="Secret text (e.g., 'Target at 0400')" class="pro-input" style="margin-top:8px">
+            <button id="stego-btn" class="action-btn" style="margin-top:8px">INJECT & COPY TO CLIPBOARD</button>
+        </section>
+
+        <section class="bento-card">
+            <span class="thin-label">Lab 18 // Sysadmin</span>
+            <h3 style="margin-top:12px">Cron Expression Parser</h3>
+            <input type="text" id="cron-input" placeholder="* * * * *" class="pro-input" style="margin-top:16px">
+            <p id="cron-out" style="font-family:'JetBrains Mono'; font-size:0.7rem; color:#3b82f6; margin-top:12px">Every minute</p>
+        </section>
+        <section class="bento-card">
+            <span class="thin-label">Lab 19 // Offense</span>
+            <h3 style="margin-top:12px">XSS Payload Library</h3>
+            <select id="xss-select" class="pro-input" style="margin-top:16px; background:var(--surface); color:white; border:1px solid var(--border)">
+                <option value="basic">&lt;script&gt;alert(1)&lt;/script&gt;</option>
+                <option value="img">&lt;img src=x onerror=alert(1)&gt;</option>
+                <option value="svg">&lt;svg onload=alert(1)&gt;</option>
+                <option value="iframe">&lt;iframe src="javascript:alert(1)"&gt;&lt;/iframe&gt;</option>
+            </select>
+            <div style="background:#000; border:1px solid var(--border); border-radius:8px; padding:12px; margin-top:12px; overflow-x:auto">
+                <code id="xss-out" style="font-family:'JetBrains Mono'; font-size:0.6rem; color:#ef4444">&lt;script&gt;alert(1)&lt;/script&gt;</code>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span class="thin-label">© 2026 <a href="login.html" style="text-decoration:none; color:inherit; cursor:default">SecurePass Academy</a> // Established 2024</span>
+        <div class="footer-nav">
+            <a href="terms.html" class="nav-link">Terms</a>
+            <a href="privacy.html" class="nav-link">Privacy</a>
+            <a href="contact.html" class="nav-link">Support</a>
+        </div>
+    </footer>
+
+    <script src="tools_database.js"></script>
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('[SYS] SW Registered:', reg.scope))
+                    .catch(err => console.error('[SYS] SW Failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>
